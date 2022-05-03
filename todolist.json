@@ -1,0 +1,440 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "OpenAPI for Todolist",
+    "description": "Documentation for TodoList App",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Rikzan Fernanda",
+      "email": "rikzanfernanda@gmail.com",
+      "url": "https://www.rikzanfernanda.github.io"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{env}.rikzanfernanda.github.io",
+      "variables": {
+        "env": {
+          "description": "Server environtment",
+          "default": "dev",
+          "enum": [
+            "dev",
+            "qa",
+            "cek"
+          ]
+        }
+      }
+    },
+    {
+      "url": "https://rikzan.com",
+      "description": "Second server"
+    }
+  ],
+  "externalDocs": {
+    "description": "Github Rikzan Fernanda",
+    "url": "https://www.gihub.com/rikzanfernanda"
+  },
+  "paths": {
+    "/todolist": {
+      "get": {
+        "summary": "Get all todolist",
+        "description": "Get all active todolist by default",
+        "tags": ["TodoList"],
+        "security": [
+          {
+            "TodoListAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "done",
+            "in": "query",
+            "description": "Filter get todolist by done",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "nullable": true
+            }
+          },
+          {
+            "name": "date_finished",
+            "in": "query",
+            "description": "Filter get todolist by date created",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": false,
+              "minLength": 5
+            },
+            "examples": {
+              "example 1": {
+                "value": "05-01-2022 14:57:00"
+              },
+              "example 2": {
+                "value": "06-01-2022 14:00:00"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response from all todolist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArrayTodoList"
+                },
+                "examples": {
+                  "success": {
+                    "$ref": "#/components/examples/ExampleGetAll"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create new todolist",
+        "description": "Create new todolist and store to database",
+        "tags": ["TodoList"],
+        "security": [
+          {
+            "TodoListAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateTodoList"
+              },
+              "examples": {
+                "Homework": {
+                  "$ref": "#/components/examples/ExampleRequestHomework"
+                },
+                "Workout": {
+                  "$ref": "#/components/examples/ExampleRequestWorkout"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response after create new todolist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoList"
+                },
+                "examples": {
+                  "Homework": {
+                    "$ref": "#/components/examples/ExampleResponseHomework"
+                  },
+                  "Workout": {
+                    "$ref": "#/components/examples/ExampleResponseWorkout"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/todolist/{id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/TodoListId"
+        }
+      ],
+      "put": {
+        "summary": "Update existing todolist by id",
+        "description": "Update existing todolist by id in database",
+        "tags": ["TodoList"],
+        "security": [
+          {
+            "TodoListAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateTodoList"
+              },
+              "examples": {
+                "Homework": {
+                  "$ref": "#/components/examples/ExampleRequestHomework"
+                },
+                "Workout": {
+                  "$ref": "#/components/examples/ExampleRequestWorkout"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response after update existing todolist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoList"
+                },
+                "examples": {
+                  "Homework": {
+                    "$ref": "#/components/examples/ExampleResponseHomework"
+                  },
+                  "Workout": {
+                    "$ref": "#/components/examples/ExampleResponseWorkout"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete existing todolist",
+        "description": "Delete existing todolist by id",
+        "tags": ["TodoList"],
+        "security": [
+          {
+            "TodoListAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response after delete existing todolist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success delete todolist",
+                    "value": {
+                      "success": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed delete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "examples": {
+                  "failed": {
+                    "description": "Failed delete todolist",
+                    "value": {
+                      "success": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/todolist/getAll": {
+      "get": {
+        "summary": "Get All todolist",
+        "description": "Get all existing todolist from database",
+        "tags": ["TodoList"],
+        "deprecated": true,
+        "responses": {
+          "200": {
+            "description": "Get all existing todolist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArrayTodoList"
+                },
+                "examples": {
+                  "success": {
+                    "$ref": "#/components/examples/ExampleGetAll"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "TodoListAuth": {
+        "name": "X-API-KEY",
+        "description": "authentication for todolist app",
+        "in": "header",
+        "type": "apiKey"
+      }
+    },
+    "parameters": {
+      "TodoListId": {
+        "name": "id",
+        "in": "path",
+        "description": "Todolist id for update and delete",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "examples": {
+          "Homework": {
+            "value": 1,
+            "description": "Sample todolist id for homework"
+          },
+          "Workout": {
+            "value": 2,
+            "description": "Sample todolist id for workout"
+          }
+        }
+      }
+    },
+    "schemas": {
+      "TodoList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreateOrUpdateTodoList": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ArrayTodoList": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/TodoList"
+        }
+      }
+    },
+    "examples": {
+      "ExampleGetAll": {
+        "description": "Example success get all todolist",
+        "value": [
+          {
+            "id": 1,
+            "name": "Do Homework",
+            "deadline": "05-01-2022 15:00:00",
+            "priority": 4,
+            "tags": [
+              "Self Management",
+              "Sport"
+            ]
+          },
+          {
+            "id": 2,
+            "name": "Workout",
+            "deadline": "05-01-2022 15:00:00",
+            "priority": 4,
+            "tags": [
+              "Self Management",
+              "Sport"
+            ]
+          }
+        ]
+      },
+      "ExampleRequestHomework": {
+        "description": "example create todolist for homework",
+        "value": {
+          "name": "Do Homework",
+          "deadline": "05-01-2022 14:00:00",
+          "priority": 4,
+          "tags": ["Self Management", "Sport"]
+        }
+      },
+      "ExampleRequestWorkout": {
+        "description": "example create todolist for workout",
+        "value": {
+          "name": "Workout",
+          "deadline": "05-01-2022 14:00:00",
+          "priority": 4,
+          "tags": ["Self Management", "Sport"]
+        }
+      },
+      "ExampleResponseHomework": {
+        "description": "example response todolist for homework",
+        "value": {
+          "id": 1,
+          "name": "Do Homework",
+          "deadline": "05-01-2022 14:00:00",
+          "priority": 4,
+          "tags": ["Self Management", "Sport"]
+        }
+      },
+      "ExampleResponseWorkout": {
+        "description": "example response todolist for workout",
+        "value": {
+          "id": 2,
+          "name": "Workout",
+          "deadline": "05-01-2022 14:00:00",
+          "priority": 4,
+          "tags": ["Self Management", "Sport"]
+        }
+      }
+    }
+  }
+}

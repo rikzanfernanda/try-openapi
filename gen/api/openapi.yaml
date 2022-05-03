@@ -1,0 +1,14 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: rikzanfernanda@gmail.com
+    name: Rikzan Fernanda
+  description: Documentation for TodoList App
+  title: OpenAPI for Todolist
+  version: 1.0.0
+servers:
+- url: /
+paths: {}
+components:
+  schemas: {}
+

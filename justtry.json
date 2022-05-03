@@ -1,0 +1,365 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "JustTry APP",
+    "version": "1.0",
+    "contact": {
+      "name": "Rikzan Fernanda",
+      "email": "fernandarikzan@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://localhost:8000"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "description": "Login as user",
+        "summary": "Login",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaLogin"
+              },
+              "examples": {
+                "Login": {
+                  "$ref": "#/components/examples/ExampleLoginRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemaLoginResponse"
+                },
+                "examples": {
+                  "success": {
+                    "$ref": "#/components/examples/ExampleLoginResponse"
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Login failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "summary": "Register",
+        "description": "Register as user",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaRegister"
+              },
+              "examples": {
+                "Rikza Fernanda": {
+                  "$ref": "#/components/examples/ExampleRegisterRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response register",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemaRegisterResponse"
+                },
+                "examples": {
+                  "success": {
+                    "$ref": "#/components/examples/ExampleRegisterResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/barangs": {
+      "get": {
+        "tags": [
+          "Barang"
+        ],
+        "summary": "Get all barang",
+        "security": [
+          {
+            "AuthApp": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return all barang",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemaBarangResponseGet"
+                },
+                "examples": {
+                  "success": {
+                    "$ref": "#/components/examples/ExampleBarangResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Barang"],
+        "summary": "Create new barang",
+        "security": [
+          {
+            "AuthApp": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaBarangRequestPost"
+              },
+              "examples": {
+                "Sepatu": {
+                  "$ref": "#/components/examples/ExampleBarangRequestSepatu"
+                },
+                "Sandal": {
+                  "$ref": "#/components/examples/ExampleBarangRequestSandal"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success create new barang",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemaBarangResponsePost"
+                },
+                "examples": {
+                  "Sepatu": {
+                    "$ref": "#/components/examples/ExampleBarangResponseSepatu"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "AuthApp": {
+        "name": "Authorization",
+        "in": "header",
+        "type": "apiKey"
+      }
+    },
+    "parameters": {
+
+    },
+    "schemas": {
+      "SchemaLogin": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "SchemaLoginResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "username": {
+            "type": "string"
+          },
+          "api_token": {
+            "type": "string"
+          }
+        }
+      },
+      "SchemaRegister": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "SchemaRegisterResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "SchemaBarangResponseGet": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SchemaBarangRequestPost": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "SchemaBarangResponsePost": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "examples": {
+      "ExampleLoginRequest": {
+        "value": {
+          "username": "rikzanfernanda",
+          "password": "password"
+        }
+      },
+      "ExampleLoginResponse": {
+        "value": {
+          "success": true,
+          "id": 1,
+          "username": "rikzanfernanda",
+          "api_token": "qweerttytuuopadfbhvbfyefjfjhkhfkjsgubbvhfbayefuh"
+        }
+      },
+      "ExampleRegisterRequest": {
+        "value": {
+          "name": "Rikzan Fernanda",
+          "username": "rikzan",
+          "password": "rikzan"
+        }
+      },
+      "ExampleRegisterResponse": {
+        "value": {
+          "id": 1,
+          "name": "Rikzan Fernanda",
+          "username": "rikzan"
+        }
+      },
+      "ExampleBarangResponse": {
+        "value": {
+          "success": true,
+          "data": [
+            {
+              "id": 1,
+              "name": "Sepatu"
+            },
+            {
+              "id": 2,
+              "name": "Sandal"
+            }
+          ]
+        }
+      },
+      "ExampleBarangRequestSepatu": {
+        "value": {
+          "name": "Sepatu"
+        }
+      },
+      "ExampleBarangRequestSandal": {
+        "value": {
+          "name": "Sandal"
+        }
+      },
+      "ExampleBarangResponseSepatu": {
+        "value": {
+          "id": 1,
+          "name": "Sepatu"
+        }
+      }
+    }
+  }
+}
